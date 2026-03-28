@@ -1,3 +1,72 @@
 spring:
   application:
     name: core-api
+  datasource:
+    # JDBC URL: tells Spring Boot HOW and WHERE to connect to PostgreSQL.
+    # - "jdbc:postgresql" → use PostgreSQL driver
+    # - "localhost" → DB is running locally
+    # - "5432" → default PostgreSQL port
+    # - "task_manager" → database name
+    #
+    # If this is wrong → Spring cannot connect → app fails at startup.
+    url: jdbc:postgresql://localhost:5432/task-manager
+
+    # Username for the database.
+    # Loaded from environment variables for SECURITY.
+    # Never hardcode credentials in code → prevents leaks in GitHub.
+    username: ${DB_USERNAME}
+
+    # Same logic as username: loaded from environment variables.
+    # If missing → authentication error from PostgreSQL.
+    password: ${DB_PASSWORD}
+
+    # Explicitly tells Spring Boot which JDBC driver to use.
+    # Spring can sometimes guess this, but not always (Docker, multi‑module).
+    # If wrong or missing → "No suitable driver" error.
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # Controls how Hibernate handles your database schema.
+      # "validate" = safest option:
+      #   → Hibernate checks that your tables match your entities
+      #   → BUT it does NOT create, update, or delete tables.
+      #
+      # Why this is important:
+      # - Prevents Hibernate from silently modifying your schema.
+      # - Forces you to use Flyway for safe migrations.
+      #
+      # If you use "update" or "create" → Hibernate may DROP or MODIFY tables
+      # and you can LOSE DATA.
+      ddl-auto:  update #validate
+
+    properties:
+      hibernate:
+        # Makes SQL logs readable by formatting them nicely.
+        # Without this → SQL is printed on one long unreadable line.
+        format_sql: true
+
+        # Tells Hibernate to generate SQL optimized for PostgreSQL.
+        # Without this → Hibernate guesses the dialect and may generate invalid SQL.
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+    # Prints SQL queries to the console.
+    # Great for learning and debugging.
+    # If removed → Hibernate still works, but you can't see the SQL.
+    show-sql: true
+
+  flyway:
+    # Enables Flyway migrations.
+    # Flyway is the industry standard for versioning your database schema.
+    # Without this → no migrations run → schema may be outdated or missing.
+    enabled: true
+
+    # Allows Flyway to run even if the database already contains tables.
+    # Useful when connecting to an existing DB.
+    # Without this → Flyway refuses to start on non‑empty databases.
+    baseline-on-migrate: true
+
+server:
+  # Port where your Spring Boot API will run.
+  # Default is 8080, but we set it explicitly for clarity.
+  port: 8080

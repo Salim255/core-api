@@ -1,50 +1,229 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- project → root of the Maven project -->
+<!-- xmlns → tells XML this follows Maven format -->
+<!-- xmlns:xsi → enables schema validation -->
+<!-- xsi:schemaLocation → where the Maven rules are defined -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<!-- <parent>This means:  This project inherits another Maven project configuration. -->
 	<parent>
+		<!-- This identifies the organization that created the parent. -->
+		<!-- In this case: Spring Boot team -->
 		<groupId>org.springframework.boot</groupId>
+		<!-- This is the specific parent project that contains the configuration. -->
+		<!-- This parent is designed specifically for Spring Boot applications.  -->
+		<!-- It is the standard starting point. -->
 		<artifactId>spring-boot-starter-parent</artifactId>
+		<!-- This is extremely important.  -->
+		<!-- It defines: Spring Boot version -->
+		<!-- That version controls:
+		- dependency versions
+		- supported libraries
+		- configuration defaults
+		-->
 		<version>4.0.5</version>
+
+		<!-- This tells Maven: -->
+		<!-- Do NOT look locally for the parent. -->
+		<!-- Download it from Maven repository. -->
+		<!-- Without this line, Maven might try to find a parent project file locally.  -->
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
+	<!-- <groupId> This represents: who owns the project -->
+	<!-- Usually it follows a reverse domain name convention. -->
+	<!-- <groupId>com.salim</groupId>: salim corresponds to your Java package structure  -->
+	<!-- src/main/java/com/salim/coreapi  -->
+	<!-- So groupId often equals the root package name.  -->
+	<!-- So choosing a good groupId structure matters later.
+	// Like: com.company:user-service
+	-->
 	<groupId>com.salim</groupId>
+	<!-- <artifactId> -->
+	<!-- This is the name of your project.Think of it as: the module name -->
+	<!-- So the artifactId controls:
+	- the JAR file name
+	- the dependency name
+	- the module identifier
+	-->
 	<artifactId>core-api</artifactId>
+	<!-- This defines the version of your application. -->
+	<!-- Typical progression:
+	- 0.0.1 → first development build
+	- 0.1.0 → early release
+	- 1.0.0 → first stable release
+	-->
+	<!-- SNAPSHOT
+	# SNAPSHOT = development version
+	# Meaning:
+	// The project is still changing.
+	// 
+	-->
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+
+	<!-- Optional human-readable project name -->
+	<name>Core API</name>
+
+	<!-- This field is used to provide a short explanation of what your project does. -->
+	<description>
+		Modern banking backend API built with Spring Boot for handling accounts, transactions, and payments.
+	</description>
+
+	<!-- This field is used to provide the main website or repository link for the project. -->
+	<!-- It basically answers: Where can people find more information about this project? -->
+	<!-- Like: <url>https://core-api.salim.com</url> -->
 	<url/>
+	<!-- This section tells Maven and other tools what license your project is released under. -->
+	<!--A software license defines: What other people are allowed to do with your code 
+	- Where you declare the legal license of the project.
+	- Currently none is specified.
+    - Optional for internal projects.
+	-->
 	<licenses>
 		<license/>
 	</licenses>
+	<!-- This section is metadata about the people who develop the project -->
+	<!-- What <developers> Means:
+	- The <developers> section lists all contributors or authors of 
+	the project. Each contributor is defined inside a <developer> tag
+	-->
 	<developers>
-		<developer/>
+		<developer>
+			<id>Salim</id>
+			<name>Salim Hassan</name>
+			<email>...</email>
+			<organization>Salim Code</organization>
+			<organizationUrl>https://www.salimcode.com</organizationUrl>
+		</developer>
 	</developers>
+
+	<!-- This section is about Source Code Management — basically, 
+	where your project’s Git (or other VCS) repository lives. -->
+	<!-- It’s mostly metadata, but very useful for collaboration, CI/CD, and publishing Maven projects. -->
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+		<!-- Read-only connection to the repository. Usually used by Maven or build tools. -->
+		<!-- Used by Maven and other tools to check out the code without needing credentials. -->
+		<!-- Typical for CI builds. -->
+		<connection> scm:git:git://github.com/salim/core-api.git </connection>
+		<!-- Read/write connection, used by developers who want to commit changes. -->
+		<!-- Developers use this to push commits. -->
+		<!-- Requires SSH key authentication. -->
+		<developerConnection>scm:git:ssh://git@github.com/salim/core-api.git</developerConnection>
+		<!-- The specific tag in the repository this release comes from.
+		 Often set to HEAD for the latest development version. -->
+		 <!-- The branch or tag associated with this build. -->
+		 <!-- For releases, this is often a version like v0.0.1. -->
+		<tag>HEAD</tag>
+		<!-- Browser-accessible URL to the repository, usually GitHub, GitLab, Bitbucket, etc. -->
+		<!-- Human-readable URL for anyone to browse the repository. -->
+		<!-- Appears in Maven repository listings or project documentation. -->
+		<url>https://github.com/salim/core-api</url>
 	</scm>
+	<!-- This section is very important because it defines project-wide variables 
+	or settings that can be reused throughout your Maven build. -->
+	<!-- What <properties> Means:
+	- Think of it like global configuration for your project.
+	- Any property defined here can be referenced elsewhere in your pom.xml.
+	- It avoids repeating values and makes your project easier to maintain.
+	-->
 	<properties>
+		<!-- - This means:The project should be compiled using Java 21. -->
+		<!-- Maven uses this value in plugins like the compiler plugin, which compiles your 
+		code into bytecode compatible with this Java version -->
 		<java.version>21</java.version>
 	</properties>
+
+	<!-- Dependencies are external libraries or modules your project needs to work. -->
 	<dependencies>
 		<dependency>
+			<!-- Spring Boot Web MVC:
+			- Provides everything needed to build REST APIs in Spring Boot:
+				- Spring MVC (controllers, routing)
+				- Embedded Tomcat server
+				- Jackson (for JSON serialization)
+			-->
+			<!-- The organization or project that produces the library. Example: -->
 			<groupId>org.springframework.boot</groupId>
+			<!-- The library name. Example: spring-boot-starter-webmvc. -->
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 
+		<!-- Spring Data JPA -->
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<!-- spring-boot-starter-data-jpa: 
+			Lets you interact with databases using entities and repositories. -->
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- PostgreSQL Driver -->
+		<dependency>
+			<!-- postgresql: The actual driver that connects Spring Boot to PostgreSQL. -->
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<!-- In Maven, each dependency can have a scope, which tells Maven when to include it:
+				- compile
+				- provided
+				- runtime
+				- test
+			-->
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Flyway: manages database migrations (schema versioning) -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<!-- Lombok: reduces boilerplate (getters, setters, constructors) -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		
+
+		<dependency>
+			<!-- Web MVC Test
+			- Provides testing tools for your web APIs:
+				- JUnit
+				- MockMvc for simulating HTTP requests
+				- AssertJ, Mockito
+			-->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
 	</dependencies>
 
+	<!-- What <build> Means:
+	The <build> section tells Maven how to build your project, including:
+		- Plugins
+		- Packaging rules
+		- Pre/post build tasks
+	Think of it as the instruction manual for Maven on how to turn your code into a working application.
+	-->
 	<build>
 		<plugins>
 			<plugin>
+				<!-- Spring Boot Maven Plugin -->
+				<!-- Purpose:
+					- Packages your Spring Boot app into an executable JAR.
+					- Allows you to run:
+						- mvn spring-boot:run
+					- Supports creating fat JARs with all dependencies included.
+					- Integrates with Maven’s package and install lifecycle.
+				-->
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
